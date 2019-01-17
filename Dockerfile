@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y \
     libcairo2-dev libjpeg62-turbo-dev libpng-dev \
     libossp-uuid-dev libavcodec-dev libavutil-dev \
     libswscale-dev libfreerdp-dev libpango1.0-dev \
-    libssh2-1-dev libtelnet-dev libvncserver-dev \
+    libtelnet-dev libvncserver-dev \
     libpulse-dev libssl-dev libvorbis-dev libwebp-dev unzip \
     ghostscript postgresql-${PG_MAJOR} \
   && rm -rf /var/lib/apt/lists/*
@@ -33,6 +33,18 @@ RUN apt-get update && apt-get install -y \
 # Link FreeRDP to where guac expects it to be
 RUN [ "$ARCH" = "armhf" ] && ln -s /usr/local/lib/freerdp /usr/lib/arm-linux-gnueabihf/freerdp || exit 0
 RUN [ "$ARCH" = "amd64" ] && ln -s /usr/local/lib/freerdp /usr/lib/x86_64-linux-gnu/freerdp || exit 0
+
+# Install libssh2 (Ed25519)
+
+RUN curl -SLO "https://github.com/libssh2/libssh2/archive/master.zip" \
+  && unzip master.zip \
+  && cd libssh2-master \
+  && sh buildconf \
+  && autoconf \
+  && ./configure \
+  && make \
+  && cd .. \
+  && rm -rf master.zip libssh2-master
 
 # Install guacamole-server
 RUN curl -SLO "https://github.com/apache/guacamole-server/archive/master.zip" \

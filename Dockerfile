@@ -47,7 +47,7 @@ RUN curl -SLO "https://github.com/apache/guacamole-server/archive/master.zip" \
   && make -j$(getconf _NPROCESSORS_ONLN) \
   && make install \
   && cd .. \
-  && rm -rf guacamole-server-${GUAC_VER}.tar.gz guacamole-server-${GUAC_VER} \
+  && rm -rf guacamole-server-master master.zip \
   && ldconfig
 
 # Install guacamole-client and postgres auth adapter
